@@ -15,15 +15,10 @@ In Production mode the /app/ path is removed before being passed to UseSpaStatic
 
 Removed "ASPNETCORE_ENVIRONMENT": "Development" entry from Properties/launchSettings.json to allow running in production mode by using env vars.
 
-Hot Module Replacement (HMR) was then enabled enabled by following:
+Hot Module Replacement (HMR) has been enabled enabled by following:
 https://github.com/angular/angular-cli/wiki/1-x-stories-configure-hmr
 
 Hot Module Replacement (HMR) is a WebPack feature to update code in a running app without rebuilding it. This results in faster updates and less full page-reloads.
-
-Startup.cs modified to use HMR:
-```
-spa.UseAngularCliServer(npmScript: "hmr");
-```
 
 Added an MVC index route using the default HomeController from the standard MVC template.
 This was added to test running the Spa from a sub-path in another branch of this repo.
