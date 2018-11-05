@@ -38,7 +38,7 @@ export function getBaseUrl() {
 
 ### Running and Building
 
-To run in Development mode
+To run in Development mode (need to run the Angular app and the dotnet app separately)
 
 Open a terminal in ClientApp dir:
 ```sh
