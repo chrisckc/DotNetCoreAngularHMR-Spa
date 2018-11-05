@@ -7,7 +7,8 @@ import { environment } from './environments/environment';
 import { hmrBootstrap } from './hmr';
 
 export function getBaseUrl() {
-  return document.getElementsByTagName('base')[0].href;
+  //return document.getElementsByTagName('base')[0].href;
+  return  `${window.location.origin}/`;
 }
 
 const providers = [
