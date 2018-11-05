@@ -54,8 +54,12 @@ namespace DotNetCoreAngularHMR_Spa
                     template: "{controller}/{action=Index}/{id?}");
             });
 
-            // Captures websocket requests (/sockjs-node/) requests to the webpack dev server
-            // These requests are made outside of /app path so capture here
+            // Captures webpack-dev-server related requests such as
+            // websocket requests (/sockjs-node/) requests to the webpack dev server
+            // These requests are made outside of '/app' sub-path so capture them here
+            // These websocket requests cant be changed to use a sub-path until this has been released
+            // https://github.com/webpack/webpack-dev-server/pull/1553
+            // however to use that fix with Angular would require ejecting from the CLI
             app.MapWhen(context => webPackDevServerMatcher(context), webpackDevServer => {
                 webpackDevServer.UseSpa(spa => {
                     spa.UseProxyToSpaDevelopmentServer(baseUri: "http://localhost:4200");
@@ -79,7 +83,7 @@ namespace DotNetCoreAngularHMR_Spa
 
                     if (env.IsDevelopment()) {
                         // Can't use UseAngularCliServer because we need a fixed port for the dev server
-                        // in order to correctly direct the /sockjs-node/ requests to the proxy above
+                        // in order to correctly forward the /sockjs-node/ requests to the dev server in the app.MapWhen block above
                         //spa.UseAngularCliServer(npmScript: "hmr");
                         // Angular Webpack Dev Server runs on port 4200
                         spa.UseProxyToSpaDevelopmentServer(baseUri: "http://localhost:4200");
@@ -89,10 +93,11 @@ namespace DotNetCoreAngularHMR_Spa
         }
 
         // Captures the requests generated when using webpack dev server in the following ways:
-        // via: https://localhost:5001/app/
-        // via: https://localhost:5001/webpack-dev-server/app/
+        // via: https://localhost:5001/app/ (inline mode)
+        // via: https://localhost:5001/webpack-dev-server/app/  (iframe mode)
         // captures requests like these:
         // https://localhost:5001/webpack_dev_server.js
+        // https://localhost:5001/webpack_dev_server/app/
         // https://localhost:5001/__webpack_dev_server__/live.bundle.js
         // wss://localhost:5001/sockjs-node/978/qhjp11ck/websocket
         private bool webPackDevServerMatcher(HttpContext context) {
